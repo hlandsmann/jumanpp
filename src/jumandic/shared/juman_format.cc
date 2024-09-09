@@ -4,6 +4,7 @@
 
 #include "juman_format.h"
 #include "core/analysis/charlattice.h"
+#include <iostream>
 
 namespace jumanpp {
 namespace jumandic {
@@ -11,6 +12,7 @@ namespace output {
 
 Status JumanFormat::format(const core::analysis::Analyzer& analysis,
                            StringPiece comment) {
+  std::cout<<"JumanFormat\n";
   printer.reset();
   JPP_RETURN_IF_ERROR(analysisResult.reset(analysis));
   JPP_RETURN_IF_ERROR(analysisResult.fillTop1(&top1));

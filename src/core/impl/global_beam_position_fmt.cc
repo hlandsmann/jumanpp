@@ -3,6 +3,9 @@
 //
 
 #include "global_beam_position_fmt.h"
+
+#include <iostream>
+
 #include "core/analysis/analyzer_impl.h"
 
 namespace jumanpp {
@@ -25,6 +28,7 @@ Status GlobalBeamPositionFormat::initialize(
 
 Status GlobalBeamPositionFormat::format(
     const core::analysis::Analyzer& analyzer, StringPiece comment) {
+  std::cout << "GlobalBeamPositionFormat: \n";
   printer_.reset();
   if (!comment.empty()) {
     printer_ << "# " << comment << "\n";

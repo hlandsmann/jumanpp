@@ -1,8 +1,8 @@
-//
-// Created by Arseny Tolmachev on 2017/12/07.
-//
 
 #include "segmented_format.h"
+
+#include <iostream>
+
 #include "core/analysis/analyzer_impl.h"
 
 namespace jumanpp {
@@ -11,6 +11,7 @@ namespace output {
 
 Status SegmentedFormat::format(const core::analysis::Analyzer &analyzer,
                                StringPiece comment) {
+  std::cout << "SegmentedFormat: \n";
   printer_.reset();
   JPP_RETURN_IF_ERROR(top1_.fillIn(analyzer.impl()->lattice()));
 

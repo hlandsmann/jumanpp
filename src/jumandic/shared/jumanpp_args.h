@@ -5,8 +5,11 @@
 #ifndef JUMANPP_JUMANPP_ARGS_H
 #define JUMANPP_JUMANPP_ARGS_H
 
+#include <format>
+#include <iostream>
 #include <ostream>
 #include <string>
+
 #include "core/analysis/rnn_scorer.h"
 #include "core_config.h"
 #include "util/cfg.h"
@@ -31,7 +34,7 @@ enum class OutputType {
   FullLatticeDump,
 #endif
 #if defined(JPP_ENABLE_DEV_TOOLS)
-      GlobalBeamPos,
+  GlobalBeamPos,
 #endif
 };
 
@@ -58,22 +61,41 @@ struct JumanppConf {
 
   void mergeWith(const JumanppConf& o) {
     configFile.mergeWith(o.configFile);
+    std::cout << std::format("configFile: {}\n", configFile.value());
     modelFile.mergeWith(o.modelFile);
+    std::cout << std::format("modelfile: {}\n", modelFile.value());
     outputType.mergeWith(o.outputType);
+    std::cout << "outputType: " << static_cast<int>(outputType.value()) << "\n";
     outputFile.mergeWith(o.outputFile);
+    std::cout << std::format("outputFile: {}\n", outputFile.value());
     inputType.mergeWith(o.inputType);
+    std::cout << std::format("inputType: {}\n",
+                             static_cast<int>(inputType.value()));
     inputFiles.mergeWith(o.inputFiles);
+    std::cout << std::format("inputFiles size: {}\n", inputFiles.value().size());
     rnnModelFile.mergeWith(o.rnnModelFile);
+    std::cout << std::format("rnnModelFile: {}\n", rnnModelFile.value());
     rnnConfig.mergeWith(o.rnnConfig);
+    std::cout << rnnConfig << "\n";
     graphvizDir.mergeWith(o.graphvizDir);
+    std::cout << std::format("graphvizDir: {}\n", graphvizDir.value());
     beamSize.mergeWith(o.beamSize);
+    std::cout << std::format("beamSize: {}\n", beamSize.value());
     beamOutput.mergeWith(o.beamOutput);
+    std::cout << std::format("beamOutput: {}\n", beamOutput.value());
     globalBeam.mergeWith(o.globalBeam);
+    std::cout << std::format("globalBeam: {}\n", globalBeam.value());
     rightBeam.mergeWith(o.rightBeam);
+    std::cout << std::format("rightBeam: {}\n", rightBeam.value());
     rightCheck.mergeWith(o.rightCheck);
+    std::cout << std::format("rightCheck: {}\n", rightCheck.value());
     logLevel.mergeWith(o.logLevel);
+    std::cout << std::format("logLevel: {}\n", logLevel.value());
     autoStep.mergeWith(o.autoStep);
+    std::cout << std::format("autoStep: {}\n", autoStep.value());
     segmentSeparator.mergeWith(o.segmentSeparator);
+    std::cout << std::format("segmentSeparator: {}\n",
+                             segmentSeparator.value());
   }
 
   friend std::ostream& operator<<(std::ostream& os, const JumanppConf& conf);

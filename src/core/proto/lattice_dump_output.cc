@@ -3,6 +3,7 @@
 //
 
 #include "lattice_dump_output.h"
+
 #include "core/analysis/analyzer_impl.h"
 #include "core/impl/feature_debug.h"
 #include "google/protobuf/io/zero_copy_stream_impl_lite.h"
@@ -270,6 +271,7 @@ struct LatticeDumpOutputImpl {
   }
 
   Status format(const core::analysis::Analyzer& analyzer, StringPiece comment) {
+    std::cout << "LatticeDumpOutputImpl: \n";
     arena_.Reset();
     ranks_.clear_no_resize();
     pathRanks_.clear_no_resize();

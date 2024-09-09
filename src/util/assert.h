@@ -122,7 +122,7 @@ class UnwindPrinter {
         func_{func},
         line_{line} {}
   ~UnwindPrinter() noexcept {
-    if (JPP_UNLIKELY(std::uncaught_exception())) {
+    if (JPP_UNLIKELY(std::uncaught_exceptions())) {
       DoPrint();
     }
   }

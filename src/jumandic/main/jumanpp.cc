@@ -3,8 +3,10 @@
 //
 
 #include "jumanpp.h"
+
 #include <fstream>
 #include <iostream>
+
 #include "core/input/pex_stream_reader.h"
 #include "jumandic/shared/jumanpp_args.h"
 #include "util/logging.hpp"
@@ -69,9 +71,11 @@ struct InputOutput {
     if (inType == jumandic::InputType::Raw) {
       auto rdr = new core::input::PlainStreamReader{};
       streamReader_.reset(rdr);
+      std::cout << "PlainStreamReader\n";
       rdr->setMaxSizes(65535, 1024);
     } else {
       auto rdr = new core::input::PexStreamReader{};
+      std::cout << "PexStreamReader\n";
       streamReader_.reset(rdr);
       JPP_RETURN_IF_ERROR(rdr->initialize(cholder, '&'));
     }
@@ -107,15 +111,17 @@ int main(int argc, const char** argv) {
     return 1;
   }
 
-  LOG_DEBUG() << "trying to create jumanppexec with model: "
-              << conf.modelFile.value()
-              << " and rnnmodel=" << conf.rnnModelFile.value();
+  std::cout << "trying to create jumanppexec with model: "
+            << conf.modelFile.value()
+            << " and rnnmodel=" << conf.rnnModelFile.value() << std::endl;
 
   jumandic::JumanppExec exec{conf};
   s = exec.init();
   if (!s.isOk()) {
     if (conf.outputType == jumandic::OutputType::Version) {
+      std::cout << "printFullVersion start\n";
       exec.printFullVersion();
+      std::cout << "printFullVersion end\n";
       return 0;
     }
 
@@ -125,7 +131,9 @@ int main(int argc, const char** argv) {
     }
 
     if (conf.outputType == jumandic::OutputType::ModelInfo) {
+      std::cout << "printModelInfo start\n";
       exec.printModelInfo();
+      std::cout << "printModelInfo end\n";
       return 0;
     }
 
@@ -145,6 +153,7 @@ int main(int argc, const char** argv) {
 
   InputOutput io;
 
+  std::cout << "io.initialize start\n";
   s = io.initialize(conf, exec.core());
   if (!s) {
     std::cerr << "Failed to initialize I/O: " << s;
@@ -170,10 +179,12 @@ int main(int argc, const char** argv) {
       continue;
     }
 
+    std::cout << "comment: " << io.streamReader_->comment() << "\n";
     s = exec.format()->format(*exec.analyzerPtr(), io.streamReader_->comment());
     if (!s) {
       std::cerr << s;
     } else {
+      std::cout << "result\n";
       *io.output_ << exec.format()->result();
     }
   }
