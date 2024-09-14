@@ -1,12 +1,10 @@
-//
-// Created by Arseny Tolmachev on 2017/03/09.
-//
+#pragma once
+#include <core/analysis/lattice_config.h>
+#include <util/string_piece.h>
 
-#ifndef JUMANPP_JUMAN_FORMAT_H
-#define JUMANPP_JUMAN_FORMAT_H
+#include <util/status.hpp>
+#include <util/types.hpp>
 
-#include <array>
-#include <sstream>
 #include "core/analysis/analysis_result.h"
 #include "core/analysis/analyzer.h"
 #include "core/analysis/output.h"
@@ -15,9 +13,7 @@
 #include "jumandic_id_resolver.h"
 #include "util/fast_printer.h"
 
-namespace jumanpp {
-namespace jumandic {
-namespace output {
+namespace jumanpp::jumandic::output {
 
 struct JumandicFields {
   core::analysis::StringField surface;
@@ -30,7 +26,7 @@ struct JumandicFields {
   core::analysis::StringField canonicForm;
   core::analysis::KVListField features;
 
-  Status initialize(const core::analysis::OutputManager& om) {
+  auto initialize(const core::analysis::OutputManager& om) -> Status {
     JPP_RETURN_IF_ERROR(om.stringField("surface", &surface));
     JPP_RETURN_IF_ERROR(om.stringField("pos", &pos));
     JPP_RETURN_IF_ERROR(om.stringField("subpos", &subpos));
@@ -57,26 +53,25 @@ class JumanFormat : public core::OutputFormat {
  public:
   JumanFormat();
 
-  Status initialize(const core::analysis::OutputManager& om) {
+  auto initialize(const core::analysis::OutputManager& om) -> Status {
     JPP_RETURN_IF_ERROR(idResolver.initialize(om.dic()));
     return flds.initialize(om);
   }
 
-  bool formatOne(const core::analysis::OutputManager& om,
-                 const core::analysis::ConnectionPtr& ptr, bool first);
-  Status format(const core::analysis::Analyzer& analysis, StringPiece comment);
-  StringPiece result() const { return printer.result(); }
+  auto formatOne(const core::analysis::OutputManager& om,
+                 const core::analysis::ConnectionPtr& ptr, bool first) -> bool;
+  auto format(const core::analysis::Analyzer& analysis,
+              StringPiece comment) -> Status override;
+  [[nodiscard]] auto result() const -> StringPiece override {
+    return printer.result();
+  }
 };
 
-inline StringPiece ifEmpty(StringPiece s1, StringPiece s2) {
+inline auto ifEmpty(StringPiece s1, StringPiece s2) -> StringPiece {
   if (s1.size() > 0) {
     return s1;
   }
   return s2;
 }
 
-}  // namespace output
-}  // namespace jumandic
-}  // namespace jumanpp
-
-#endif  // JUMANPP_JUMAN_FORMAT_H
+}  // namespace jumanpp::jumandic::output

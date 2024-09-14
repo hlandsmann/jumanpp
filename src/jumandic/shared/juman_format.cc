@@ -1,10 +1,20 @@
-//
-// Created by Arseny Tolmachev on 2017/03/09.
-//
 
+#include <jumandic/shared/jumandic_spec.h>
+#include <core/analysis/output.h>
+#include <util/common.hpp>
+#include <jumandic/shared/jumandic_id_resolver.h>
+#include <util/types.hpp>
+#include <util/fast_printer.h>
 #include "juman_format.h"
-#include "core/analysis/charlattice.h"
+
+#include <core/analysis/analyzer.h>
+#include <core/analysis/lattice_config.h>
+#include <util/string_piece.h>
+
 #include <iostream>
+#include <util/status.hpp>
+
+#include "core/analysis/charlattice.h"
 
 namespace jumanpp {
 namespace jumandic {
@@ -12,12 +22,12 @@ namespace output {
 
 Status JumanFormat::format(const core::analysis::Analyzer& analysis,
                            StringPiece comment) {
-  std::cout<<"JumanFormat\n";
+  std::cout << "JumanFormat\n";
   printer.reset();
   JPP_RETURN_IF_ERROR(analysisResult.reset(analysis));
   JPP_RETURN_IF_ERROR(analysisResult.fillTop1(&top1));
 
-  auto& outMgr = analysis.output();
+  const auto& outMgr = analysis.output();
 
   if (!comment.empty()) {
     printer << "# " << comment << '\n';
@@ -27,7 +37,7 @@ Status JumanFormat::format(const core::analysis::Analyzer& analysis,
     if (top1.remainingNodesInChunk() <= 0) {
       return Status::InvalidState() << "no nodes in chunk";
     }
-    core::analysis::ConnectionPtr connPtr;
+    core::analysis::ConnectionPtr connPtr{};
     if (!top1.nextNode(&connPtr)) {
       return Status::InvalidState() << "failed to load a node";
     }
@@ -48,9 +58,9 @@ StringPiece escapeForJumanOutput(StringPiece in) {
     switch (in[0]) {
       // return fullwidth char
       case '\t':
-        return StringPiece("\\t");
+        return StringPiece{"\\t"};
       case ' ':
-        return StringPiece("\\␣");
+        return StringPiece{"\\␣"};
     }
   }
   return in;
